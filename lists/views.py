@@ -4,7 +4,7 @@ from .models import Item
 
 def home_page(request):
     if request.method == "POST":
-        new_todo = Item(text=request.POST.get('item_text'))
+        new_todo = Item(text=request.POST['item_text'])
         new_todo.save()
         return redirect('home_page')
 
