@@ -9,7 +9,11 @@
     <input id="id_new_item" placeholder="Enter a to-do item"/>
 </form>
 <table id="id_list_table">
-
+    {% for items in todos %}
+        <tr>
+            <td>{{ items.count }}: {{ items.text }}</td>
+        </tr>
+    {% endfor %}
 </table>
 </body>
 </html>
