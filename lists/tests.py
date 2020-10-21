@@ -24,7 +24,13 @@ class HomePageTest(TestCase):
 
     def test_can_save_a_POST_request(self):
         response = self.client.post("/", data={'item_text': "A new list item"})
-        self.assertIn('A new list item', response.content.decode(), "The to-do list item could not be found in the response..")
+        saved_item = Item.objects.all().first()
+        self.assertEqual(saved_item.text, "A new list item")
+
+    def test_redirects_after_POST(self):
+        response = self.client.post("/", data={'item_text': "A new list item"})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
 
     def test_response_shows_all_todo_items_for_user(self):
         test_todos = [
@@ -40,3 +46,7 @@ class HomePageTest(TestCase):
         response = self.client.get("/")
         for todos in all_user_todo_items:
             self.assertIn(todos.text, response.content.decode(), f"The saved to-do list item {todos.text} could not be found in the response..")
+
+    def test_doesnt_save_items_for_no_reason(self):
+        self.client.get("/")
+        self.assertEqual(Item.objects.all().count(), 0)
