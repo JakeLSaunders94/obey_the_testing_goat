@@ -25,3 +25,4 @@ JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't fin
 ###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
 
 1603282246413	geckodriver	INFO	Listening on 127.0.0.1:57822
+1603289512299	geckodriver	INFO	Listening on 127.0.0.1:50888
