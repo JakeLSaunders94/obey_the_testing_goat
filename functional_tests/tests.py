@@ -2,11 +2,26 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 from django.test import LiveServerTestCase
+from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 import unittest
 
+MAX_WAIT = 10
+class GeneralSeleniumFunctions:
+    def wait_for_object_by_id(self, driver, object_id, wait_time=MAX_WAIT):
+        try:
+            WebDriverWait(driver, wait_time).until(
+                EC.presence_of_element_located((By.ID, object_id))
+            )
+            return True
+        except:
+            return False
 
-class NewVisitorTest(LiveServerTestCase):
+
+class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -43,7 +58,8 @@ class NewVisitorTest(LiveServerTestCase):
         # When she hits enter, the page updates, and now the page lists
         # "1: Buy peacock feathers" as an item in a to-do list table
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
+        self.assertTrue(self.wait_for_object_by_id(self.browser, 'id_list_table'), "The page took to long to load or the defining object was not found.")
+
 
         self.check_for_todo_item('1: Buy peacock feathers')
         table = self.browser.find_element_by_id('id_list_table')
@@ -55,7 +71,7 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys("Use peacock feathers to make a fly")
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
+        self.assertTrue(self.wait_for_object_by_id(self.browser, 'id_list_table'), "The page took to long to load or the defining object was not found.")
 
         # The page updates again, and now shows both items on her list
         self.check_for_todo_item("2: Use peacock feathers to make a fly")
