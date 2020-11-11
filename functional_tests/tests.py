@@ -8,8 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 import unittest
-
-MAX_WAIT = 10
+MAX_WAIT = 5
 class GeneralSeleniumFunctions:
     def wait_for_object_by_id(self, driver, object_id, wait_time=MAX_WAIT):
         try:
@@ -29,10 +28,19 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
     def tearDown(self):
         self.browser.quit()
 
-    def check_for_todo_item(self, item_text):
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn(item_text, [row.text for row in rows])
+    def wait_for_todo_item(self, item_text, wait_time):
+        start_time = time.time()
+        while True:
+            try:
+                table = self.browser.find_element_by_id('id_list_table')
+                rows = table.find_elements_by_tag_name('tr')
+                self.assertIn(item_text, [row.text for row in rows])
+                return
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > wait_time:
+                    raise e
+                time.sleep(0.5)
+
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Edith has heard about a cool new online to-do app. She goes
@@ -58,11 +66,9 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
         # When she hits enter, the page updates, and now the page lists
         # "1: Buy peacock feathers" as an item in a to-do list table
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
-        self.assertTrue(self.wait_for_object_by_id(self.browser, 'id_list_table'), "The page took to long to load or the defining object was not found.")
 
 
-        self.check_for_todo_item('1: Buy peacock feathers')
+        self.wait_for_todo_item('1: Buy peacock feathers', 5)
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
 
@@ -76,7 +82,7 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
         self.assertTrue(self.wait_for_object_by_id(self.browser, 'id_list_table'), "The page took to long to load or the defining object was not found.")
 
         # The page updates again, and now shows both items on her list
-        self.check_for_todo_item("2: Use peacock feathers to make a fly")
+        self.wait_for_todo_item("2: Use peacock feathers to make a fly", 5)
 
         # Edith wonders whether the site will remember her list. Then she sees
         # that the site has generated a unique URL for her -- there is some
