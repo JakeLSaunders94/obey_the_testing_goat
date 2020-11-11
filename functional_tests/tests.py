@@ -78,8 +78,6 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys("Use peacock feathers to make a fly")
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
-        self.assertTrue(self.wait_for_object_by_id(self.browser, 'id_list_table'), "The page took to long to load or the defining object was not found.")
 
         # The page updates again, and now shows both items on her list
         self.wait_for_todo_item("2: Use peacock feathers to make a fly", 5)
@@ -88,3 +86,43 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
         # that the site has generated a unique URL for her -- there is some
         # explanatory text to that effect.
         self.fail("Finish your test!")
+
+    def test_multiple_users_can_start_lists_st_different_URLS(self):
+        # Edith starts a new to-do list
+        self.browser.get(self.live_server_url)
+
+        box = self.browser.find_element_by_id('id_new_item')
+        box.send_keys('Buy peacock feathers')
+        box.send_keys(Keys.ENTER)
+        self.wait_for_todo_item('1: Buy peacock feathers', 5)
+
+        # Edith notices her list has a unique URL
+        edith_list_url = self.browser.current_url
+        self.assertRegex(edith_list_url, "/lists/.+")
+
+        # Our second new user, Dave, comes to the site (on a new browser instance)
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # Dave goes ont his new list, he doesn't care about fly fishing. Edith's list isn't shown.
+        self.browser.get(self.live_server_url)
+        page_tect = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_tect)
+        self.assertNotIn('Make a fly', page_tect)
+
+        # Dave starts his own list, dave is into 2nd world war reinactment
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys("Buy Sherman Tank")
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_todo_item("Buy Sherman Tank", 5)
+
+        # Dave also gets his own URL
+        dave_list_url = self.browser.current_url
+        self.assertRegex(dave_list_url, '/lists/.+')
+        self.assertNotEqual(dave_list_url, edith_list_url)
+
+        # Still no sign of edith's list (what would a guy who owns a tank do with fly fishing equipment?)
+        self.browser.get(self.live_server_url)
+        page_tect = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_tect)
+        self.assertNotIn('Make a fly', page_tect)
