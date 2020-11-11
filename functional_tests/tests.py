@@ -58,6 +58,7 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
         # When she hits enter, the page updates, and now the page lists
         # "1: Buy peacock feathers" as an item in a to-do list table
         inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
         self.assertTrue(self.wait_for_object_by_id(self.browser, 'id_list_table'), "The page took to long to load or the defining object was not found.")
 
 
@@ -71,6 +72,7 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys("Use peacock feathers to make a fly")
         inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
         self.assertTrue(self.wait_for_object_by_id(self.browser, 'id_list_table'), "The page took to long to load or the defining object was not found.")
 
         # The page updates again, and now shows both items on her list
