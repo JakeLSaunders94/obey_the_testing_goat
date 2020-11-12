@@ -114,7 +114,7 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys("Buy Sherman Tank")
         inputbox.send_keys(Keys.ENTER)
-        self.wait_for_todo_item("Buy Sherman Tank", 5)
+        self.wait_for_todo_item("2: Buy Sherman Tank", 5)
 
         # Dave also gets his own URL
         dave_list_url = self.browser.current_url

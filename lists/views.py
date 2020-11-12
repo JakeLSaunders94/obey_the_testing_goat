@@ -6,9 +6,11 @@ def home_page(request):
     if request.method == "POST":
         new_todo = Item(text=request.POST['item_text'])
         new_todo.save()
-        return redirect('home_page')
+        return redirect('/lists/the-only-list-in-the-world')
 
-    all_items = Item.objects.all()
-    return render(request, 'home_page.html', {'todos': all_items})
+    return render(request, 'home_page.html')
 
 
+def view_list(request):
+    items = Item.objects.all()
+    return render(request, 'list.html', {'todos': items})
