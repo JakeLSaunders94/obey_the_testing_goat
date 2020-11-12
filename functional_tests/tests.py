@@ -8,7 +8,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 import unittest
+
 MAX_WAIT = 5
+
+
 class GeneralSeleniumFunctions:
     def wait_for_object_by_id(self, driver, object_id, wait_time=MAX_WAIT):
         try:
@@ -41,7 +44,6 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
                     raise e
                 time.sleep(0.5)
 
-
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Edith has heard about a cool new online to-do app. She goes
         # to check out its homepage
@@ -66,7 +68,6 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
         # When she hits enter, the page updates, and now the page lists
         # "1: Buy peacock feathers" as an item in a to-do list table
         inputbox.send_keys(Keys.ENTER)
-
 
         self.wait_for_todo_item('1: Buy peacock feathers', 5)
         table = self.browser.find_element_by_id('id_list_table')
