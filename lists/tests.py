@@ -2,18 +2,32 @@ from django.test import TestCase
 from django.urls import resolve
 from django.http import HttpResponse, HttpRequest
 from .views import home_page
-from .models import Item
+from .models import Item, List
 
 class ModelTests(TestCase):
     def test_creating_and_retrieving_todo_items(self):
+        list = List()
+        list.save()
+
         item = Item(text="The first to-do item")
+        item.List = list
         item.save()
 
         item = Item(text="The second to-do item")
+        item.List = list
         item.save()
+
+        saved_list = List.objects.first()
+        self.assertEqual(saved_list, list)
 
         saved_items = Item.objects.all()
         self.assertEqual(saved_items.count(), 2)
+
+        # Check that the two list items have the correct text and the correct list
+        self.assertEqual(Item.objects.filter(List=list,
+                                             text="The first to-do item").count(), 1)
+        self.assertEqual(Item.objects.filter(List=list,
+                                             text="The second to-do item").count(), 1)
 
 
 
@@ -24,8 +38,11 @@ class HomePageTest(TestCase):
 
 class ListViewTest(TestCase):
     def test_displays_all_items(self):
-        Item.objects.create(text="testy 1")
-        Item.objects.create(text="testy 2")
+        list = List.objects.create()
+        Item.objects.create(text="testy 1",
+                            List=list)
+        Item.objects.create(text="testy 2",
+                            List=list)
 
         response = self.client.get('/lists/the-only-list-in-the-world')
         self.assertContains(response, 'testy 1')
