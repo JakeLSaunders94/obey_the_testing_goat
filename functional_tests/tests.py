@@ -49,13 +49,19 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
         # to check out its homepage
         self.browser.get(self.live_server_url)
 
+
+
         # She notices the page title and header mention to-do lists
         self.assertIn('To-Do', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('To-Do', header_text)
 
-        # She is invited to enter a to-do item straight away
+        # Her input box is nice and centered, and everything looks beautiful
+        self.browser.set_window_size(1024, 768)
         inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(inputbox.location['x'] + inputbox.size['width'] / 2, 512, delta=10)
+
+        # She is invited to enter a to-do item straight away
         self.assertEqual(
             inputbox.get_attribute('placeholder'),
             'Enter a to-do item'
@@ -68,6 +74,10 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
         # When she hits enter, the page updates, and now the page lists
         # "1: Buy peacock feathers" as an item in a to-do list table
         inputbox.send_keys(Keys.ENTER)
+
+        # the input box is nice and centered on our second page too
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(inputbox.location['x'] + inputbox.size['width'] / 2, 512, delta=10)
 
         self.wait_for_todo_item('1: Buy peacock feathers', 5)
         table = self.browser.find_element_by_id('id_list_table')
