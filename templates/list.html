@@ -4,16 +4,17 @@
 </head>
 <body>
 <h1>Your To-Do List</h1>
-<form method="post" action="/lists/new">
+<form method="post" action="/lists/current/{{list.id}}/add_item">
     {% csrf_token %}
     <input id="id_new_item" name="item_text" placeholder="Enter a to-do item"/>
 </form>
 <table id="id_list_table">
-    {% for items in todos %}
+    {% for items in list.item_set.all %}
         <tr>
             <td>{{ forloop.counter }}: {{ items.text }}</td>
         </tr>
     {% endfor %}
 </table>
+<h4 id="your_list_link">To visit your list again , please go to http://oursite/lists/current/{{list.id}}</h4>
 </body>
 </html>

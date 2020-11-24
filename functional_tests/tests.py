@@ -86,7 +86,8 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
         # Edith wonders whether the site will remember her list. Then she sees
         # that the site has generated a unique URL for her -- there is some
         # explanatory text to that effect.
-        self.fail("Finish your test!")
+        link = self.browser.find_element_by_id('your_list_link')
+        self.assertEqual(link.text, "To visit your list again , please go to http://oursite/lists/current/1")
 
     def test_multiple_users_can_start_lists_st_different_URLS(self):
         # Edith starts a new to-do list
@@ -115,7 +116,7 @@ class NewVisitorTest(LiveServerTestCase, GeneralSeleniumFunctions):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys("Buy Sherman Tank")
         inputbox.send_keys(Keys.ENTER)
-        self.wait_for_todo_item("2: Buy Sherman Tank", 5)
+        self.wait_for_todo_item("1: Buy Sherman Tank", 5)
 
         # Dave also gets his own URL
         dave_list_url = self.browser.current_url
