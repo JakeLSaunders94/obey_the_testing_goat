@@ -5,16 +5,16 @@
 {% endblock %}
 
 {% block form %}
-    <div class="row">
+    <div class="row bg-primary">
         <div class="col-12 text-center">
             <h1>Your To-Do List</h1>
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-2">
         <div class="col-12 text-center">
             <form method="post" action="/lists/current/{{ list.id }}/add_item">
                 {% csrf_token %}
-                <input id="id_new_item" name="item_text" placeholder="Enter a to-do item"/>
+                <input id="id_new_item" name="item_text" class="form-control-lg form-control" placeholder="Enter a to-do item"/>
             </form>
         </div>
     </div>
@@ -23,7 +23,7 @@
 {% block table %}
     <div class="row">
         <div class="col-12">
-            <table id="id_list_table">
+            <table id="id_list_table" class="table">
                 {% for items in list.item_set.all %}
                     <tr>
                         <td>{{ forloop.counter }}: {{ items.text }}</td>
@@ -35,5 +35,5 @@
 {% endblock %}
 
 {% block other %}
-    <h4 id="your_list_link">To visit your list again , please go to http://oursite/lists/current/{{ list.id }}</h4>
+    <h4 class="mt-4" id="your_list_link">To visit your list again , please go to http://oursite/lists/current/{{ list.id }}</h4>
 {% endblock %}
