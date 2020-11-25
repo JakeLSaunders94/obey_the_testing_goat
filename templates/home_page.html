@@ -5,9 +5,18 @@
 {% endblock %}
 
 {% block form %}
-    <h1>Start a New To-Do-List</h1>
-    <form method="post" action="/lists/new">
-        {% csrf_token %}
-        <input id="id_new_item" name="item_text" placeholder="Enter a to-do item"/>
-    </form>
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>Start a New To-Do-List</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <form method="post" class="text-center" action="/lists/new">
+                {% csrf_token %}
+                <input id="id_new_item" name="item_text" class="" placeholder="Enter a to-do item"/>
+            </form>
+        </div>
+    </div>
+    </div>
 {% endblock %}

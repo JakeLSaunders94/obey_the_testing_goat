@@ -6,17 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block title %}
     {% endblock %}
-    <link rel="stylesheet" href="{% static '' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
 </head>
 
 
 <body>
-{% block form %}
-{% endblock %}
+<div class="container">
+    {% block form %}
+    {% endblock %}
 
-{% block table %}
-{% endblock %}
+    {% block table %}
+    {% endblock %}
 
-{% block other %}
-{% endblock %}
+    {% block other %}
+    {% endblock %}
+</div>
 </body>
