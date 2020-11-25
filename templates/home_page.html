@@ -1,12 +1,13 @@
-<html>
-<head>
+{% extends 'base.html' %}
+
+{% block title %}
     <title>To-Do lists</title>
-</head>
-<body>
-<h1>Start a New To-Do-List</h1>
-<form method="post" action="/lists/new">
-    {% csrf_token %}
-    <input id="id_new_item" name="item_text" placeholder="Enter a to-do item"/>
-</form>
-</body>
-</html>
+{% endblock %}
+
+{% block form %}
+    <h1>Start a New To-Do-List</h1>
+    <form method="post" action="/lists/new">
+        {% csrf_token %}
+        <input id="id_new_item" name="item_text" placeholder="Enter a to-do item"/>
+    </form>
+{% endblock %}

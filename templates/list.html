@@ -1,20 +1,27 @@
-<html>
-<head>
+{% extends 'base.html' %}
+
+{% block title %}
     <title>To-Do lists</title>
-</head>
-<body>
-<h1>Your To-Do List</h1>
-<form method="post" action="/lists/current/{{list.id}}/add_item">
-    {% csrf_token %}
-    <input id="id_new_item" name="item_text" placeholder="Enter a to-do item"/>
-</form>
-<table id="id_list_table">
-    {% for items in list.item_set.all %}
-        <tr>
-            <td>{{ forloop.counter }}: {{ items.text }}</td>
-        </tr>
-    {% endfor %}
-</table>
-<h4 id="your_list_link">To visit your list again , please go to http://oursite/lists/current/{{list.id}}</h4>
-</body>
-</html>
+{% endblock %}
+
+{% block form %}
+    <h1>Your To-Do List</h1>
+    <form method="post" action="/lists/current/{{ list.id }}/add_item">
+        {% csrf_token %}
+        <input id="id_new_item" name="item_text" placeholder="Enter a to-do item"/>
+    </form>
+{% endblock %}
+
+{% block table %}
+    <table id="id_list_table">
+        {% for items in list.item_set.all %}
+            <tr>
+                <td>{{ forloop.counter }}: {{ items.text }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
+{% block other %}
+    <h4 id="your_list_link">To visit your list again , please go to http://oursite/lists/current/{{ list.id }}</h4>
+{% endblock %}
